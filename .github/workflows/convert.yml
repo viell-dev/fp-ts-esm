@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v3
       
       # Setup Node.js environment
-      - uses: actions/setup-node@v3.6.0
+      - uses: actions/setup-node@v3
         with:
           node-version-file: .nvmrc
 
@@ -38,5 +38,14 @@ jobs:
       - name: Move ./build/esm/HKT/index.js to ./build/esm/HKT.js
         run: mv -v ./build/esm/HKT/index.js ./build/esm/HKT.js
         
-      - name: Remove the ./build/esm/HKT directory.
+      - name: Remove the ./build/esm/HKT directory
         run: rm -vrf ./build/esm/HKT
+
+      - name: Add extensions to all import lines
+        run: find ./build/esm -type f -exec sed -ri "s|from '([^']*)'|from '\1.js'|g" {} \; \( -iname "*.js" -o -iname "*.d.ts" \)
+
+      - name: Add extensions to all dynamic imports
+        run: find ./build/esm -type f -exec sed -ri "s|import\('([^']*)'|import('\1.js'|g" {} \; \( -iname "*.js" -o -iname "*.d.ts" \)
+
+      - name: Add extensions to module declarations
+        run: find ./build/esm -type f -exec sed -i "s|'./HKT'|'./HKT.js'|g" {} \; \( -iname "*.js" -o -iname "*.d.ts" \)
