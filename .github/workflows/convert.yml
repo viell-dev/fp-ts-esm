@@ -1,0 +1,41 @@
+name: Convert latest fp-ts release
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      
+      # Setup Node.js environment
+      - uses: actions/setup-node@v3.6.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Download the latest fp-ts release from npm
+        run: npm pack fp-ts
+
+      - name: Extract the tarball
+        run: tar -xzf *.tgz
+        
+      - name: Make a new working directory and enter it
+        run: |
+          mkdir work
+          cd work
+          
+      - name: Copy the es6 folder from package
+        run: cp -r ../package/es6 ./esm
+        
+      - name: Copy HKT.d.ts from package
+        run: cp ../package/HKT.d.ts ./esm/HKT.d.ts
+        
+      - name: Move /esm/HKT/index.js to /esm/HKT.js
+        run: mv ./esm/HKT/index.js ./esm/HKT.js
+        
+      - name: Remove the HKT directory.
+        run: rm -rf ./esm/HKT
