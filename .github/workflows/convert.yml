@@ -21,12 +21,27 @@ jobs:
         run: npm pack fp-ts
 
       - name: Extract the tarball
-        run: tar -xzf *.tgz
+        run: tar -xzvf *.tgz
+
+      - name: Debug - ls
+        run: ls
+
+      - name: Debug - ls package
+        run: ls package
         
       - name: Make a new working directory and enter it
         run: |
           mkdir work
           cd work
+
+      - name: Debug - ls
+        run: ls
+
+      - name: Debug - ls ..
+        run: ls ..
+
+      - name: Debug - ls ../package
+        run: ls ../package
           
       - name: Copy the es6 folder from package
         run: cp -r ../package/es6 ./esm
