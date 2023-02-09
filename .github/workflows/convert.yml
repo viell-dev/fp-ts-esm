@@ -22,35 +22,21 @@ jobs:
 
       - name: Extract the tarball
         run: tar -xzvf *.tgz
-
-      - name: Debug - ls
-        run: ls
-
-      - name: Debug - ls package
-        run: ls package
         
-      - name: Make a new working directory and enter it
-        run: |
-          mkdir work
-          cd work
-
-      - name: Debug - ls
-        run: ls
-
-      - name: Debug - ls ..
-        run: ls ..
-
-      - name: Debug - ls ../package
-        run: ls ../package
+      - name: Make a build directory
+        run: mkdir -v build
           
       - name: Copy the es6 folder from package
-        run: cp -r ../package/es6 ./esm
+        run: cp -v -r ./package/es6 ./build/esm
         
       - name: Copy HKT.d.ts from package
-        run: cp ../package/HKT.d.ts ./esm/HKT.d.ts
+        run: cp -v ./package/HKT.d.ts ./build/esm/HKT.d.ts
+
+      - name: Copy package.json from package
+        run: cp -v ./package/package.json ./build/
         
-      - name: Move /esm/HKT/index.js to /esm/HKT.js
-        run: mv ./esm/HKT/index.js ./esm/HKT.js
+      - name: Move ./build/esm/HKT/index.js to ./build/esm/HKT.js
+        run: mv -v ./build/esm/HKT/index.js ./build/esm/HKT.js
         
-      - name: Remove the HKT directory.
-        run: rm -rf ./esm/HKT
+      - name: Remove the ./build/esm/HKT directory.
+        run: rm -vrf ./build/esm/HKT
